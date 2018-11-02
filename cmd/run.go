@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 /*
@@ -61,16 +62,19 @@ var batch1Directory string
 var batch2Directory string
 
 func processBatches() {
+	var wg sync.WaitGroup
 
-	/*
+	wg.Add(2)
+	go processEvenBatch(&wg)
+	go processOddBatch(&wg)
+	wg.Wait()
 
-	 */
-
-	go processEvenBatch()
-	go processOddBatch()
 }
 
-func processEvenBatch(){
+func processEvenBatch(wg *sync.WaitGroup){
+
+	defer wg.Done()
+
 	//Batch 1 - Even
 	batch1DirInfo, err := ioutil.ReadDir(batch1Directory)
 	if err != nil {
@@ -92,7 +96,10 @@ func processEvenBatch(){
 	}
 }
 
-func processOddBatch(){
+func processOddBatch(wg *sync.WaitGroup){
+
+	defer wg.Done()
+
 	//Batch 2 - Odd
 	batch2DirInfo, err := ioutil.ReadDir(batch2Directory)
 	if err != nil {
