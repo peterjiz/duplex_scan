@@ -28,7 +28,7 @@ import (
 /*
 folder batch 1:
 get today's date:
-set i = 0
+set i = 1
 loop over files
 rename file YYYY-MM-DD-i,
 i += 2
@@ -37,7 +37,7 @@ exit loop
 folder batch 1:
 get today's date:
 get list of files
-set i = 1
+set i = 2
 reverse iterate through list of files
 rename file YYYY-MM-DD-i,
 i += 2
@@ -63,15 +63,14 @@ var batch2Directory string
 
 func processBatches() {
 	var wg sync.WaitGroup
-
 	wg.Add(2)
-	go processEvenBatch(&wg)
 	go processOddBatch(&wg)
+	go processEvenBatch(&wg)
 	wg.Wait()
 
 }
 
-func processEvenBatch(wg *sync.WaitGroup){
+func processOddBatch(wg *sync.WaitGroup){
 
 	defer wg.Done()
 
@@ -82,7 +81,7 @@ func processEvenBatch(wg *sync.WaitGroup){
 		return
 	}
 
-	fileIndex := 0
+	fileIndex := 1
 	for _, file := range batch1DirInfo {
 		if strings.Contains(file.Name(), "DS_Store") {
 			continue
@@ -96,7 +95,7 @@ func processEvenBatch(wg *sync.WaitGroup){
 	}
 }
 
-func processOddBatch(wg *sync.WaitGroup){
+func processEvenBatch(wg *sync.WaitGroup){
 
 	defer wg.Done()
 
@@ -107,7 +106,7 @@ func processOddBatch(wg *sync.WaitGroup){
 		return
 	}
 
-	fileIndex := 1
+	fileIndex := 2
 	for i := len(batch2DirInfo)-1; i >= 0; i-- {
 		file := batch2DirInfo[i]
 
